@@ -16,6 +16,8 @@ namespace BlueModas.Persistence.Mappings
             builder.Property(c => c.Email).IsRequired();
             builder.Property(c => c.Phone).IsRequired();
             builder.HasMany(c => c.Carts).WithOne(cart => cart.Client).HasForeignKey(cart => cart.ClientId);
+            builder.HasMany(c => c.Orders).WithOne(o => o.Client).HasForeignKey(o => o.ClientId).OnDelete(DeleteBehavior.NoAction);
+
 
             builder.HasData(new Client(1, "Raphael", "raphael@teste.com", "(35) 98811-1492"));
             builder.HasData(new Client(2, "Antonella Sarah Cristiane Araújo", "aantonellasarahcristianearaujo@yahool.com", "(12) 99982-6766"));

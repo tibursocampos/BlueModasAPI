@@ -1,3 +1,4 @@
+using BlueModas.Domain;
 using BlueModas.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +29,9 @@ namespace BlueModasAPI
             //var connectionString = Configuration.GetConnectionString("BlueModas");
             //services.AddScoped(provider => new BlueModasContext(connectionString));
 
+            services.AddTransient<IRepository, Repository>();
+
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +52,14 @@ namespace BlueModasAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(options =>
+            {
+                options
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseAuthorization();
 

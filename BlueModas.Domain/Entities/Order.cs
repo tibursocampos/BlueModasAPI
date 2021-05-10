@@ -13,19 +13,22 @@ namespace BlueModas.Domain.Entities
 
         }
 
-        public Order(int id, int clientId) : this (clientId)
+        public Order(int id, int clientId, int cartId) : this (clientId, cartId)
         {
             Id = id;
         }
 
-        public Order(int clientId)
+        public Order(int clientId, int cartId)
         {
             ClientId = clientId;
+            CartId = cartId;
         }
 
         public int ClientId { get; private set; }
+        public int CartId { get; private set; }
         public Client Client { get; private set; }
-        public ICollection<Cart> Carts { get; private set; }
+        public Cart Cart { get; private set; }
+        public ICollection<Product> Products { get; set; }
 
     }
 }

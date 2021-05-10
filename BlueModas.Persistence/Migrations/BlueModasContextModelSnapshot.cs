@@ -41,8 +41,6 @@ namespace BlueModas.Persistence.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("OrderId");
-
                     b.ToTable("Cart");
                 });
 
@@ -124,10 +122,16 @@ namespace BlueModas.Persistence.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId")
+                        .IsUnique();
 
                     b.HasIndex("ClientId");
 
@@ -302,6 +306,21 @@ namespace BlueModas.Persistence.Migrations
                     b.ToTable("CartProduct");
                 });
 
+            modelBuilder.Entity("OrderProduct", b =>
+                {
+                    b.Property<int>("OrdersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrdersId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("OrderProduct");
+                });
+
             modelBuilder.Entity("BlueModas.Domain.Entities.Cart", b =>
                 {
                     b.HasOne("BlueModas.Domain.Entities.Client", "Client")
@@ -310,24 +329,24 @@ namespace BlueModas.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlueModas.Domain.Entities.Order", "Order")
-                        .WithMany("Carts")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("Client");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BlueModas.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("BlueModas.Domain.Entities.Cart", "Cart")
+                        .WithOne("Order")
+                        .HasForeignKey("BlueModas.Domain.Entities.Order", "CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BlueModas.Domain.Entities.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Cart");
 
                     b.Navigation("Client");
                 });
@@ -347,16 +366,31 @@ namespace BlueModas.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OrderProduct", b =>
+                {
+                    b.HasOne("BlueModas.Domain.Entities.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrdersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BlueModas.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BlueModas.Domain.Entities.Cart", b =>
+                {
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("BlueModas.Domain.Entities.Client", b =>
                 {
                     b.Navigation("Carts");
 
                     b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("BlueModas.Domain.Entities.Order", b =>
-                {
-                    b.Navigation("Carts");
                 });
 #pragma warning restore 612, 618
         }

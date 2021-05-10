@@ -12,6 +12,7 @@ namespace BlueModas.Persistence.Mappings
         public override void Configure(EntityTypeBuilder<Cart> builder)
         {
             base.Configure(builder);
+            builder.HasOne(o => o.Order).WithOne(c => c.Cart).HasForeignKey<Order>(o => o.CartId);
         }
     }
 }

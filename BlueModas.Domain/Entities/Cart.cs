@@ -27,7 +27,7 @@ namespace BlueModas.Domain.Entities
         }
 
         public int ClientId { get; private set; }
-        public int OrderId { get; set; }
+        public int OrderId { get; private set; }
         public int Amount { get; private set; }
         public double Total { get; private set; }
         public ICollection<Product> Products { get; private set; }
