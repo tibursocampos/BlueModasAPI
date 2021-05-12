@@ -27,7 +27,7 @@ namespace BlueModas.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ProductMapping());
-            modelBuilder.ApplyConfiguration(new CartMapping());
+            modelBuilder.ApplyConfiguration(new OrderItemMapping());
             modelBuilder.ApplyConfiguration(new ClientMapping());
             modelBuilder.ApplyConfiguration(new OrderMapping());
         }

@@ -14,6 +14,7 @@ namespace BlueModas.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false)
                 },
                 constraints: table =>
@@ -47,7 +48,8 @@ namespace BlueModas.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<int>(type: "int", nullable: false)
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    Total = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,51 +63,28 @@ namespace BlueModas.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cart",
+                name: "OrderItemMapping",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<int>(type: "int", nullable: false),
-                    Total = table.Column<double>(type: "float", nullable: false)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cart", x => x.Id);
+                    table.PrimaryKey("PK_OrderItemMapping", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Cart_Client_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Client",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Cart_Order_OrderId",
+                        name: "FK_OrderItemMapping_Order_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Order",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CartProduct",
-                columns: table => new
-                {
-                    CartsId = table.Column<int>(type: "int", nullable: false),
-                    ProductsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CartProduct", x => new { x.CartsId, x.ProductsId });
-                    table.ForeignKey(
-                        name: "FK_CartProduct_Cart_CartsId",
-                        column: x => x.CartsId,
-                        principalTable: "Cart",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CartProduct_Product_ProductsId",
-                        column: x => x.ProductsId,
+                        name: "FK_OrderItemMapping_Product_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -113,15 +92,15 @@ namespace BlueModas.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Client",
-                columns: new[] { "Id", "Email", "Name", "Phone" },
+                columns: new[] { "Id", "Email", "Name", "Password", "Phone" },
                 values: new object[,]
                 {
-                    { 1, "raphael@teste.com", "Raphael", "(35) 98811-1492" },
-                    { 2, "aantonellasarahcristianearaujo@yahool.com", "Antonella Sarah Cristiane Araújo", "(12) 99982-6766" },
-                    { 3, "cesarmurilomoreira..cesarmurilomoreira@ornatopresentes.com.br", "César Murilo Moreira", "(82) 98635-7667" },
-                    { 4, "emanuellyclaudiadias..emanuellyclaudiadias@osbocops.com", "Emanuelly Cláudia Dias", "(27) 98498-9488" },
-                    { 5, "iandavidanielfarias__iandavidanielfarias@silnave.com.br", "Ian Davi Daniel Farias", "(21) 98907-0282" },
-                    { 6, "camilateresinhadamata-72@bds.com.br", "Camila Teresinha da Mata", "(89) 98901-1497" }
+                    { 1, "raphael@teste.com", "Raphael", "123456", "(35) 98811-1492" },
+                    { 2, "aantonellasarahcristianearaujo@yahool.com", "Antonella Sarah Cristiane Araújo", "123456", "(12) 99982-6766" },
+                    { 3, "cesarmurilomoreira..cesarmurilomoreira@ornatopresentes.com.br", "César Murilo Moreira", "123456", "(82) 98635-7667" },
+                    { 4, "emanuellyclaudiadias..emanuellyclaudiadias@osbocops.com", "Emanuelly Cláudia Dias", "123456", "(27) 98498-9488" },
+                    { 5, "iandavidanielfarias__iandavidanielfarias@silnave.com.br", "Ian Davi Daniel Farias", "123456", "(21) 98907-0282" },
+                    { 6, "camilateresinhadamata-72@bds.com.br", "Camila Teresinha da Mata", "123456", "(89) 98901-1497" }
                 });
 
             migrationBuilder.InsertData(
@@ -142,39 +121,31 @@ namespace BlueModas.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cart_ClientId",
-                table: "Cart",
-                column: "ClientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cart_OrderId",
-                table: "Cart",
-                column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CartProduct_ProductsId",
-                table: "CartProduct",
-                column: "ProductsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Order_ClientId",
                 table: "Order",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItemMapping_OrderId",
+                table: "OrderItemMapping",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItemMapping_ProductId",
+                table: "OrderItemMapping",
+                column: "ProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CartProduct");
-
-            migrationBuilder.DropTable(
-                name: "Cart");
-
-            migrationBuilder.DropTable(
-                name: "Product");
+                name: "OrderItemMapping");
 
             migrationBuilder.DropTable(
                 name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "Product");
 
             migrationBuilder.DropTable(
                 name: "Client");

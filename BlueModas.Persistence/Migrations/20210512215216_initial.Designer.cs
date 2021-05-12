@@ -3,14 +3,16 @@ using BlueModas.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlueModas.Persistence.Migrations
 {
     [DbContext(typeof(BlueModasContext))]
-    partial class BlueModasContextModelSnapshot : ModelSnapshot
+    [Migration("20210512215216_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,7 +147,7 @@ namespace BlueModas.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItemMapping");
                 });
 
             modelBuilder.Entity("BlueModas.Domain.Entities.Product", b =>
