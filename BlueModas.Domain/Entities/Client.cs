@@ -8,15 +8,16 @@ namespace BlueModas.Domain.Entities
 {
     public class Client : Entity
     {
-        public Client(int id, string name, string email, string phone) : this(name, email, phone)
+        public Client(int id, string name, string email, string password, string phone) : this(name, email, password, phone)
         {
             Id = id;
         }
 
-        public Client(string name, string email, string phone)
+        public Client(string name, string email, string password, string phone)
         {
             Name = name;
             Email = email;
+            Password = password;
             Phone = phone;
         }
 
@@ -26,14 +27,15 @@ namespace BlueModas.Domain.Entities
 
         public string Name { get; private set; }
         public string Email { get; private set; }
+        public string Password { get; private set; }
         public string Phone { get; private set; }
-        public ICollection<Cart> Carts { get; private set; }
         public ICollection<Order> Orders { get; private set; }
 
-        public void Update(string name, string email, string phone)
+        public void Update(string name, string email, string password, string phone)
         {
             Name = name;
             Email = email;
+            Password = password;
             Phone = phone;
         }
     }

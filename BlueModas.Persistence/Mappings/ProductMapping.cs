@@ -17,6 +17,7 @@ namespace BlueModas.Persistence.Mappings
             builder.Property(p => p.Category).IsRequired();
             builder.Property(p => p.Size).IsRequired();
             builder.Property(p => p.Amount).IsRequired();
+            builder.HasMany(x => x.OrderItems).WithOne(x => x.Product).HasForeignKey(x => x.ProductId);
 
             builder.HasData(new Product(1, "Camiseta Preta", "Camiseta casual com tecido leve", 20.50, CategoryEnum.TShirt, SizeEnum.G, Gender.Male, 100));
             builder.HasData(new Product(2, "Camiseta Preta", "Camiseta casual com tecido leve", 25.00, CategoryEnum.TShirt, SizeEnum.M, Gender.Female, 100));

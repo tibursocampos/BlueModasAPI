@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlueModas.Persistence.Migrations
 {
     [DbContext(typeof(BlueModasContext))]
-    [Migration("20210509232403_initial")]
-    partial class initial
+    [Migration("20210512215755_nameTable")]
+    partial class nameTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,32 +19,6 @@ namespace BlueModas.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("BlueModas.Domain.Entities.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Total")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("Cart");
-                });
 
             modelBuilder.Entity("BlueModas.Domain.Entities.Client", b =>
                 {
@@ -59,6 +33,11 @@ namespace BlueModas.Persistence.Migrations
                         .HasColumnType("nvarchar(70)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(70)
                         .HasColumnType("nvarchar(70)");
@@ -78,6 +57,7 @@ namespace BlueModas.Persistence.Migrations
                             Id = 1,
                             Email = "raphael@teste.com",
                             Name = "Raphael",
+                            Password = "123456",
                             Phone = "(35) 98811-1492"
                         },
                         new
@@ -85,6 +65,7 @@ namespace BlueModas.Persistence.Migrations
                             Id = 2,
                             Email = "aantonellasarahcristianearaujo@yahool.com",
                             Name = "Antonella Sarah Cristiane Araújo",
+                            Password = "123456",
                             Phone = "(12) 99982-6766"
                         },
                         new
@@ -92,6 +73,7 @@ namespace BlueModas.Persistence.Migrations
                             Id = 3,
                             Email = "cesarmurilomoreira..cesarmurilomoreira@ornatopresentes.com.br",
                             Name = "César Murilo Moreira",
+                            Password = "123456",
                             Phone = "(82) 98635-7667"
                         },
                         new
@@ -99,6 +81,7 @@ namespace BlueModas.Persistence.Migrations
                             Id = 4,
                             Email = "emanuellyclaudiadias..emanuellyclaudiadias@osbocops.com",
                             Name = "Emanuelly Cláudia Dias",
+                            Password = "123456",
                             Phone = "(27) 98498-9488"
                         },
                         new
@@ -106,6 +89,7 @@ namespace BlueModas.Persistence.Migrations
                             Id = 5,
                             Email = "iandavidanielfarias__iandavidanielfarias@silnave.com.br",
                             Name = "Ian Davi Daniel Farias",
+                            Password = "123456",
                             Phone = "(21) 98907-0282"
                         },
                         new
@@ -113,6 +97,7 @@ namespace BlueModas.Persistence.Migrations
                             Id = 6,
                             Email = "camilateresinhadamata-72@bds.com.br",
                             Name = "Camila Teresinha da Mata",
+                            Password = "123456",
                             Phone = "(89) 98901-1497"
                         });
                 });
@@ -124,20 +109,45 @@ namespace BlueModas.Persistence.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<double>("Total")
+                        .HasColumnType("float");
 
-                    b.HasIndex("CartId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
                     b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("BlueModas.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("BlueModas.Domain.Entities.Product", b =>
@@ -293,106 +303,49 @@ namespace BlueModas.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CartProduct", b =>
-                {
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("CartProduct");
-                });
-
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrdersId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("OrderProduct");
-                });
-
-            modelBuilder.Entity("BlueModas.Domain.Entities.Cart", b =>
-                {
-                    b.HasOne("BlueModas.Domain.Entities.Client", "Client")
-                        .WithMany("Carts")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-                });
-
             modelBuilder.Entity("BlueModas.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("BlueModas.Domain.Entities.Cart", "Cart")
-                        .WithOne("Order")
-                        .HasForeignKey("BlueModas.Domain.Entities.Order", "CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BlueModas.Domain.Entities.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Cart");
 
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("CartProduct", b =>
+            modelBuilder.Entity("BlueModas.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("BlueModas.Domain.Entities.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
+                    b.HasOne("BlueModas.Domain.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlueModas.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.HasOne("BlueModas.Domain.Entities.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
+                    b.HasOne("BlueModas.Domain.Entities.Product", "Product")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlueModas.Domain.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BlueModas.Domain.Entities.Cart", b =>
-                {
                     b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("BlueModas.Domain.Entities.Client", b =>
                 {
-                    b.Navigation("Carts");
-
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("BlueModas.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("BlueModas.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

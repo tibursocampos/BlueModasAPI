@@ -39,8 +39,7 @@ namespace BlueModas.Domain.Entities
         public SizeEnum Size { get; private set; }
         public Gender Gender { get; private set; }
         public int Amount { get; private set; }
-        public ICollection<Cart> Carts { get; private set; }
-        public ICollection<Order> Orders { get; private set; }
+        public ICollection<OrderItem> OrderItems { get; private set; } 
 
         public void Update(string name, string description, double price, CategoryEnum category, SizeEnum size, Gender gender, int amount)
         {

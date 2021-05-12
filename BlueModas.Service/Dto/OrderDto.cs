@@ -13,15 +13,13 @@ namespace BlueModas.Service.Dto
         {
             Id = order.Id;
             ClientId = order.ClientId;
-            CartId = order.ClientId;
+            Total = order.Total;
             Client = order.Client;
-            Cart = order.Cart;
         }
 
         public int Id { get; set; }
         public int ClientId { get; set; }
-        public int CartId { get; set; }
+        public double Total { get; set; }
         public Client Client { get; set; }
-        public Cart Cart { get; set; }
     }
 }
