@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace BlueModas.Service
 {
-    public interface IOrderService
+    public interface IOrderItemService
     {
 
     }
 
-    public class OrderService : IOrderService
+    public class OrderItemService : IOrderItemService
     {
     }
 }

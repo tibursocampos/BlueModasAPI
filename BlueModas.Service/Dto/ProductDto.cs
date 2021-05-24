@@ -10,6 +10,11 @@ namespace BlueModas.Service.Dto
 {
     public class ProductDto
     {
+        public ProductDto()
+        {
+
+        }
+
         public ProductDto(Product product)
         {
             if (product == null) return;

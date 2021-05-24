@@ -16,12 +16,11 @@ namespace BlueModas.Persistence
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=RAPHAEL-DESKTOP;" + "Initial Catalog=BlueModasDb;Integrated Security=True");
-            //if (!optionsBuilder.IsConfigured)
-            //{
-            //    optionsBuilder.UseSqlServer(connectionString);
-            //}
+        {       
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,7 +32,7 @@ namespace BlueModas.Persistence
         }
     }
 
-    public class EBuffetContextFactory : IDesignTimeDbContextFactory<BlueModasContext>
+    public class BlueModasContextFactory : IDesignTimeDbContextFactory<BlueModasContext>
     {
         public BlueModasContext CreateDbContext(string[] args)
         {
@@ -42,7 +41,7 @@ namespace BlueModas.Persistence
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? string.Empty}.json", true, true)
                 .Build();
 
-            return new BlueModasContext(configuration.GetConnectionString("BlueModas"));
+            return new BlueModasContext(configuration.GetConnectionString("DefaultConnection"));
         }
     }
 }

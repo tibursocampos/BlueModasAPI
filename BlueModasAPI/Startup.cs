@@ -1,5 +1,6 @@
 using BlueModas.Domain;
 using BlueModas.Persistence;
+using BlueModas.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,14 +23,14 @@ namespace BlueModasAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //var connection = Configuration["ConnectionString:DefaultConnection"];
-            //services.AddDbContext<BlueModasContext>(options =>
-            //options.UseSqlServer(connection));
-
-            //var connectionString = Configuration.GetConnectionString("BlueModas");
-            //services.AddScoped(provider => new BlueModasContext(connectionString));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddScoped(provider => new BlueModasContext(connectionString));
 
             services.AddTransient<IRepository, Repository>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IOrderItemService, OrderItemService>();
 
             services.AddCors();
             services.AddControllers();

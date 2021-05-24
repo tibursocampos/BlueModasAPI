@@ -8,7 +8,11 @@ namespace BlueModas.Domain.Entities
 {
     public class Client : Entity
     {
-        public Client(int id, string name, string email, string password, string phone) : this(name, email, password, phone)
+        protected Client()
+        {
+
+        }
+        internal Client(int id, string name, string email, string password, string phone) : this(name, email, password, phone)
         {
             Id = id;
         }
@@ -19,10 +23,6 @@ namespace BlueModas.Domain.Entities
             Email = email;
             Password = password;
             Phone = phone;
-        }
-
-        protected Client()
-        {
         }
 
         public string Name { get; private set; }

@@ -16,9 +16,9 @@ namespace BlueModas.Service
         ProductDto GetById(int id);
         List<ProductDto> GetByCategory(CategoryEnum category);
         List<ProductDto> GetByGender(Gender gender);
-        Task<ResponseDto> Create(ProductDto product);
-        ResponseDto Update(ProductDto product);
-        ResponseDto Delete(int id);
+        Task<ResponseDto> Create(ProductDto productDto);
+        Task<ResponseDto> Update(ProductDto productDto);
+        Task<ResponseDto> Delete(int id);
         bool ProductExists(int id);
     }
 
@@ -88,14 +88,36 @@ namespace BlueModas.Service
             return new ResponseDto().Created();
         }
 
-        public ResponseDto Delete(int id)
+        public async Task<ResponseDto> Delete(int id)
         {
-            throw new NotImplementedException();
+            var extist = ProductExists(id);
+            if (!extist)
+            {
+                return new ResponseDto().NotFound("Produto não encontrado");
+            }
+            else
+            {
+                var product = repository.Query<Product>().FirstOrDefault(x => x.Id == id);
+                repository.Remove(product);
+                await repository.SaveChangesAsync();
+
+                return new ResponseDto().Executed();
+            }
         }
 
-        public ResponseDto Update(ProductDto product)
+        public async Task<ResponseDto> Update(ProductDto productDto)
         {
-            throw new NotImplementedException();
+            var product = repository.Query<Product>().FirstOrDefault(x => x.Id == productDto.Id);
+
+            if(product == null)
+            {
+                return new ResponseDto().NotFound("Produto não encontrado");
+            }
+
+            product.Update(productDto.Name, productDto.Description, productDto.Price, productDto.Category, productDto.Size, productDto.Gender, productDto.Amount);
+
+            await repository.SaveChangesAsync();
+            return new ResponseDto().Executed();
         }
 
         public bool ProductExists(int id)
