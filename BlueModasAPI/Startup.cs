@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Caching.Redis;
 
 namespace BlueModasAPI
 {
@@ -25,6 +26,23 @@ namespace BlueModasAPI
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddScoped(provider => new BlueModasContext(connectionString));
+
+            //Configuração para uso do Redis na máquina local
+            services.AddEasyCaching(options =>
+            {
+                options.UseRedis(redisConfig =>
+                {
+                    redisConfig.DBConfig.Endpoints.Add(new EasyCaching.Core.Configurations.ServerEndPoint("localhost", 6379));
+                    redisConfig.DBConfig.AllowAdmin = true;
+                },
+                "redis1");
+            });
+
+            //services.AddDistributedRedisCache(options =>
+            //{
+            //    options.Configuration = Configuration.GetConnectionString("RedisDefaultConnection");
+            //    options.InstanceName = "blueModasCache";
+            //});
 
             services.AddTransient<IRepository, Repository>();
             services.AddTransient<IOrderService, OrderService>();
