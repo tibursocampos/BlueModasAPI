@@ -9,6 +9,11 @@ namespace BlueModas.Service.Dto
 {
     public class ClientDto
     {
+        public ClientDto()
+        {
+                
+        }
+
         public ClientDto(Client client)
         {
             if (client == null) return;

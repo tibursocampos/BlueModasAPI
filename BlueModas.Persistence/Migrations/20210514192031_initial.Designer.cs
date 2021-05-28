@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlueModas.Persistence.Migrations
 {
     [DbContext(typeof(BlueModasContext))]
-    [Migration("20210512215755_nameTable")]
-    partial class nameTable
+    [Migration("20210514192031_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

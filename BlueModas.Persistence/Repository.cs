@@ -27,7 +27,7 @@ namespace BlueModas.Persistence
         }
 
         public void Remove<T>(T entity) where T : class
-        {
+        {            
             context.Remove(entity);
         }
 

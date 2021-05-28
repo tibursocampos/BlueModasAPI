@@ -1,5 +1,6 @@
 using BlueModas.Domain;
 using BlueModas.Persistence;
+using BlueModas.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Caching.Redis;
 
 namespace BlueModasAPI
 {
@@ -22,14 +24,31 @@ namespace BlueModasAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //var connection = Configuration["ConnectionString:DefaultConnection"];
-            //services.AddDbContext<BlueModasContext>(options =>
-            //options.UseSqlServer(connection));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddScoped(provider => new BlueModasContext(connectionString));
 
-            //var connectionString = Configuration.GetConnectionString("BlueModas");
-            //services.AddScoped(provider => new BlueModasContext(connectionString));
+            //Configuração para uso do Redis na máquina local
+            services.AddEasyCaching(options =>
+            {
+                options.UseRedis(redisConfig =>
+                {
+                    redisConfig.DBConfig.Endpoints.Add(new EasyCaching.Core.Configurations.ServerEndPoint("localhost", 6379));
+                    redisConfig.DBConfig.AllowAdmin = true;
+                },
+                "redis1");
+            });
+
+            //services.AddDistributedRedisCache(options =>
+            //{
+            //    options.Configuration = Configuration.GetConnectionString("RedisDefaultConnection");
+            //    options.InstanceName = "blueModasCache";
+            //});
 
             services.AddTransient<IRepository, Repository>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IClientService, ClientService>();
+            services.AddTransient<IOrderItemService, OrderItemService>();
 
             services.AddCors();
             services.AddControllers();

@@ -14,7 +14,7 @@ namespace BlueModas.Domain.Entities
 
         }
 
-        public Product(int id, string name, string description, double price, CategoryEnum category, SizeEnum size, Gender gender, int amount) : 
+        internal Product(int id, string name, string description, double price, CategoryEnum category, SizeEnum size, Gender gender, int amount) : 
             this(name, description, price, category, size, gender, amount)
         {
             Id = id;

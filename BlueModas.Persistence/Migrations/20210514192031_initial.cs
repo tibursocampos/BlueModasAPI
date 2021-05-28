@@ -63,7 +63,7 @@ namespace BlueModas.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItemMapping",
+                name: "OrderItem",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -75,15 +75,15 @@ namespace BlueModas.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItemMapping", x => x.Id);
+                    table.PrimaryKey("PK_OrderItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItemMapping_Order_OrderId",
+                        name: "FK_OrderItem_Order_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItemMapping_Product_ProductId",
+                        name: "FK_OrderItem_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "Id",
@@ -126,20 +126,20 @@ namespace BlueModas.Persistence.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItemMapping_OrderId",
-                table: "OrderItemMapping",
+                name: "IX_OrderItem_OrderId",
+                table: "OrderItem",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItemMapping_ProductId",
-                table: "OrderItemMapping",
+                name: "IX_OrderItem_ProductId",
+                table: "OrderItem",
                 column: "ProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderItemMapping");
+                name: "OrderItem");
 
             migrationBuilder.DropTable(
                 name: "Order");
